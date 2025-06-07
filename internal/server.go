@@ -53,26 +53,27 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func StartServer() {
+func StartServer(port int) {
 	http.HandleFunc("/ws", handleConnections)
 
-	fmt.Println("WebSocket server started on :3000")
-	if err := http.ListenAndServe(":3000", nil); err != nil {
+	fmt.Printf("WebSocket server started on :%d\n", port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
 		fmt.Printf("Error starting server: %v\n", err)
 	}
 }
 
-func Connect(initialMessage string) {
+func Connect(port int) {
 	// Handle OS interrupt signals
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
-	u := url.URL{Scheme: "ws", Host: "localhost:3000", Path: "/ws"}
+	u := url.URL{Scheme: "ws", Host: fmt.Sprintf("localhost:%d", port), Path: "/ws"}
 	log.Printf("Connecting to %s", u.String())
 
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {
 		log.Fatal("dial:", err)
+		return
 	}
 	defer c.Close()
 
@@ -90,15 +91,6 @@ func Connect(initialMessage string) {
 			log.Printf("Received: %s", message)
 		}
 	}()
-
-	// Optionally send the initial message
-	if initialMessage != "" {
-		err := c.WriteMessage(websocket.TextMessage, []byte(initialMessage))
-		if err != nil {
-			log.Println("initial write:", err)
-			return
-		}
-	}
 
 	// Read from stdin and send to server
 	go func() {

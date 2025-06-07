@@ -31,17 +31,18 @@ Ensure you have the following tools installed on your system:
 ```bash
 git clone https://github.com/TonyGLL/broadcast-server.git
 cd broadcast-server
-go build -o broadcast-server cmd/main.go
+make build
 ```
 
 ## Usage
 
 ### Start the websocket server
 ```bash
-./broadcast-server -start
+./broadcast-server start` -p ${PORT}`
 ```
 
 ### Connect a client and send messages
 ```bash
-./broadcast-server -connect -message="Hello from client"
+./broadcast-server connect -p ${PORT}
+Send message
 ```

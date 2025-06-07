@@ -9,7 +9,7 @@ build:
 
 # Comando para ejecutar el proyecto
 start: build
-	@./$(BINARY_NAME) -start
+	@./$(BINARY_NAME) start
 
 connect: build
-	@./$(BINARY_NAME) -connect
+	@./$(BINARY_NAME) connect
