@@ -119,6 +119,7 @@ func Connect(initialMessage string) {
 	for {
 		select {
 		case <-done:
+			log.Println("connection closed by server")
 			return
 		case <-interrupt:
 			log.Println("Interrupt received. Closing connection...")
